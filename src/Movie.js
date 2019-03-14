@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import {apiKey, apiUrlTitle, apiUrlSearch} from './data'
-import Popup from 'reactjs-popup'
+import { apiKey, apiUrlTitle } from './data'
 import MoviePopup from "./MoviePopup";
 
 export class Movie extends Component {
@@ -18,17 +17,14 @@ export class Movie extends Component {
   }
 
   movieClick = (title) => {
-      console.log('Movie title clicked', title)
         axios.get(`${apiUrlTitle}${title}&apikey=${apiKey}`)
             .then(res => {
               console.log(res.data)
-              this.setState({movie: res.data, getMovie: true, showPopup: true})
+              this.setState({movie: res.data, getMovie: true})
             })
     }
 
   render() {
-    console.log('Movie Title render:', this.props.title)
-
     const { movie } = this.state
 
     return (
@@ -48,6 +44,7 @@ export class Movie extends Component {
                 <MoviePopup
                     title={movie.Title}
                     actors={movie.Actors}
+                    director={movie.Director}
                     production={movie.Production}
                     genre={movie.Genre}
                     year={movie.Year}

@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import axios from 'axios'
-import {apiKey, apiUrlTitle, apiUrlSearch} from './data'
 import Popup from "reactjs-popup";
 
 const contentStyle = {
@@ -17,31 +15,28 @@ class MoviePopup extends Component {
       }
   }
 
-  openModal = () => {
-    this.setState({ open: true })
-  }
-
   closeModal = () => {
     this.setState({ open: false })
   }
 
   render() {
-    const {title, actors, production, genre, year} = this.props
+    const {title, actors, director, production, genre, year} = this.props
 
     return (
         <Popup
-               defaultOpen
-               // open={this.openModal}
-               modal
-               lockScroll={true}
-               contentStyle={contentStyle}
-               onClose={this.closeModal}
-        >
+           defaultOpen
+           modal
+           lockScroll={true}
+           contentStyle={contentStyle}
+           onClose={this.closeModal}>
+
           <div className="modal">
             <div className="header">{title}</div>
             <div className="content">
               <h3>Actors</h3>
               {actors}
+              <h3>Director</h3>
+              {director}
               <h3>Production</h3>
               {production}
               <h3>Genre</h3>
@@ -50,6 +45,7 @@ class MoviePopup extends Component {
               {year}
             </div>
           </div>
+
         </Popup>
     )
   }

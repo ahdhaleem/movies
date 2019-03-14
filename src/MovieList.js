@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import {apiKey, apiUrlTitle, apiUrlSearch} from './data'
+import {apiKey, apiUrlSearch} from './data'
 import './index.css'
 import {Movie} from "./Movie";
 
@@ -9,6 +9,7 @@ export default class MovieList extends Component {
     super(props)
 
       this.state = {
+        searchError: false,
         getMovieList: false,
         getMovie: false,
         movieList: [],
@@ -26,28 +27,34 @@ export default class MovieList extends Component {
   showMovieList = () => {
     axios.get(`${apiUrlSearch}${this.state.search}&apikey=${apiKey}`)
         .then(res => {
-          console.log(res.data.Search)
-          this.setState({movieList: res.data.Search, getMovieList: true})
+          this.setState({movieList: res.data.Search, getMovieList: true, searchError: false})
+        })
+        .catch(error => {
+          // handle error
+          this.setState({ searchError: true, getMovieList: false})
         })
   }
 
+  renderMovies = (results) => {
+      return (
+          <div>
+            <ul className="movie-results">{results}</ul>
+          </div>
+      )
+  }
+
+
   render() {
+    const {movieList, searchError, getMovieList} = this.state
 
-    // console.log('state movie list',this.state.movieList)
+     const results = movieList.map((movie, index) =>
+          <Movie index={index}
+                 image={movie.Poster}
+                 title={movie.Title}
+                 year={movie.Year}/>)
 
-    // const movieList = this.state.movieList.filter(
-    //     (movie) => movie.title.indexOf(this.state.search) !== -1)
-    const {movieList} = this.state
+      return (
 
-    const results = movieList.map((movie, index) =>
-                <Movie
-                    index={index}
-                    image={movie.Poster}
-                    title={movie.Title}
-                    year={movie.Year}
-                    />)
-
-    return (
           <div className="app">
             <h1>Movies</h1>
             <input type="text"
@@ -57,9 +64,11 @@ export default class MovieList extends Component {
             />
             <span><button onClick={this.showMovieList}>Search</button></span>
             <div>
-              {this.state.getMovieList ?
-                  <ul className="movie-results">{results}</ul> : null}
+              <ul className="movie-results">
+                {getMovieList ? this.renderMovies(results) : ''}
+              </ul>
             </div>
-          </div>)
+          </div>
+      )
   }
 }
