@@ -46,13 +46,10 @@ img {
   border-radius: 10px 10px 0 0;
 }
 
-/*.movie-card {*/
-  /*width: 240px;*/
-  /*border: 1px solid black;*/
-  /*box-shadow: 5px 4px 8px 0 rgba(0, 0, 0, 0.2), 5px 6px 20px 0 rgba(0, 0, 0, 0.19);*/
-  /*border-radius: 10px;*/
-  /*margin: 10px 20px;*/
-/*}*/
+.movie-not-found {
+  margin-right: 75px
+}
+
 .movie-container {
   width: 75%;
   margin: auto;

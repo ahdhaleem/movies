@@ -16,16 +16,24 @@ export default class MovieList extends Component {
         movie: [],
         search: ''
       }
+      this.start = null;
   }
 
   updateSearch = (event) => {
+    clearTimeout(this.start);
+    this.start = setTimeout(() => {
+      if(this.state.search.trim('') !== ''){
+        this.showMovieList()
+      }
+    }, 0)
+
     this.setState({
       search: event.target.value
     })
   }
 
   showMovieList = () => {
-    axios.get(`${apiUrlSearch}${this.state.search}&apikey=${apiKey}`)
+    axios.get(`${apiUrlSearch}${this.state.search.trim('')}&apikey=${apiKey}`)
         .then(res => {
           this.setState({movieList: res.data.Search, getMovieList: true, searchError: false})
         })
@@ -33,6 +41,15 @@ export default class MovieList extends Component {
           // handle error
           this.setState({ searchError: true, getMovieList: false})
         })
+  }
+
+  movieNotFound = () => {
+    if(this.state.search !== '') {
+      return <h3 className="movie-not-found">Movie Not Found!</h3>
+    }
+    else {
+      return ''
+    }
   }
 
   renderMovies = (results) => {
@@ -45,14 +62,15 @@ export default class MovieList extends Component {
 
 
   render() {
-    const {movieList, searchError, getMovieList} = this.state
+    const {movieList, search, getMovieList} = this.state
 
-     const results = movieList.map((movie, index) =>
+
+     const results = Array.isArray(movieList) ? movieList.map((movie, index) =>
           <Movie index={index}
                  image={movie.Poster}
                  title={movie.Title}
                  year={movie.Year}/>)
-
+                  : <h3>{this.movieNotFound()}</h3>;
       return (
 
           <div className="app">
@@ -62,7 +80,7 @@ export default class MovieList extends Component {
                    value={this.state.search}
                    onChange={this.updateSearch}
             />
-            <span><button onClick={this.showMovieList}>Search</button></span>
+            {/*<span><button onClick={this.showMovieList}>Search</button></span>*/}
             <div>
               <ul className="movie-results">
                 {getMovieList ? this.renderMovies(results) : ''}
